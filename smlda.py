@@ -31,7 +31,6 @@ class UMLDA(BaseEstimator):
                         self.constrained_dimensions[ii] = constrained_dimensions[ii]
 
     def fit(self, X, y):
-
         n_samples = X.shape[0]
         X_ = np.reshape(X, [n_samples] + list(self.shape))
 
@@ -127,7 +126,6 @@ class UMLDA(BaseEstimator):
 
 
 def ray2(X1, X2, rrank, S=[], G=[], max_iter=1000, min_diff=1e-6, isshown=False, coef_id=0):
-
     dim = np.array(X1.shape)
     n_dim = len(dim)
     rdim = np.array(np.where(rrank > 0)[0])
@@ -227,11 +225,11 @@ def multilinear_transform(X, A):
     return X
 
 def tensor_cov_mode(t, mode, N=1, subtract_mean=0):
-	t_unfold = unfold(t, mode)
-	if subtract_mean == 1:
-		t_unfold = subtract_mean_mode(t_unfold, 1)
-	out = np.dot(t_unfold, t_unfold.T)/N
-	return out
+    t_unfold = unfold(t, mode)
+    if subtract_mean == 1:
+        t_unfold = subtract_mean_mode(t_unfold, 1)
+    out = np.dot(t_unfold, t_unfold.T)/N
+    return out
 
 def null(X):
     M = np.dot(X, X.T)
@@ -246,49 +244,49 @@ def spaninter(X, Y):
 
 # A'*R*A
 def quadcalc(R, A):
-	return np.dot(np.dot(A.T, R), A)
+    return np.dot(np.dot(A.T, R), A)
 
 def mprod(t, x, mode):
-	dim = np.array(t.shape)
-	t_unfold = unfold(t, mode)
-	ans = np.dot(x.T, t_unfold)
-	dim[mode] = x.shape[1];
-	out = fold(ans, mode, dim)
-	return out
+    dim = np.array(t.shape)
+    t_unfold = unfold(t, mode)
+    ans = np.dot(x.T, t_unfold)
+    dim[mode] = x.shape[1];
+    out = fold(ans, mode, dim)
+    return out
 
 def unfold(t, mode):
-	dim = np.array(t.shape)
-	if mode == 0:
-		v2 = range(mode+1, len(dim))
-		out = t.reshape(dim[0], np.prod(dim[v2]))
-	else:
-		v2 = range(len(dim))
-		v2[0] = mode
-		v2[mode] = 0
-		outt = t.swapaxes(0, mode)
-		out = outt.reshape(dim[mode], np.prod(dim[v2[1:len(dim)]]))
-	return out
+    dim = np.array(t.shape)
+    if mode == 0:
+        v2 = range(mode+1, len(dim))
+        out = t.reshape(dim[0], np.prod(dim[v2]))
+    else:
+        v2 = range(len(dim))
+        v2[0] = mode
+        v2[mode] = 0
+        outt = t.swapaxes(0, mode)
+        out = outt.reshape(dim[mode], np.prod(dim[v2[1:len(dim)]]))
+    return out
 
 def subtract_mean_mode(t, mode):
-	dim = np.array(t.shape)
-	tdim = dim.copy()
-	tdim[mode] = 1
-	m = t.mean(mode)
-	m.resize(tdim)
-	mm = mprod(m, np.ones((1, dim[mode]), dtype='float64'), mode)
-	out = t - mm
-	return out
+    dim = np.array(t.shape)
+    tdim = dim.copy()
+    tdim[mode] = 1
+    m = t.mean(mode)
+    m.resize(tdim)
+    mm = mprod(m, np.ones((1, dim[mode]), dtype='float64'), mode)
+    out = t - mm
+    return out
 
 def fold(mat, mode, dim):
-	if mode == 0:
-		out = mat.reshape(dim)
-	else:
-		v3 = range(len(dim))
-		v3[0] = mode
-		v3[mode] = 0
-		tmp = mat.reshape(dim[v3])
-		out = tmp.swapaxes(0, mode)
-	return out
+    if mode == 0:
+        out = mat.reshape(dim)
+    else:
+        v3 = range(len(dim))
+        v3[0] = mode
+        v3[mode] = 0
+        tmp = mat.reshape(dim[v3])
+        out = tmp.swapaxes(0, mode)
+    return out
 
 if __name__ == '__main__':
     from sklearn import cross_validation
